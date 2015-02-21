@@ -7,13 +7,20 @@ import java.io.IOException;
 
 
 public class Program
-{
+{	
     public static void main(String[] args) throws FileNotFoundException
     {
-    	String fileName = args[0];
-    	int ReadFrom = Integer.parseInt(args[1]);
-    	int RowsToRead = Integer.parseInt(args[2]);    	
-        System.out.println(Program.read(fileName, ReadFrom, RowsToRead));
+    	try{
+    		String fileName = args[0];
+    		int ReadFrom = Integer.parseInt(args[1]);
+    		int RowsToRead = Integer.parseInt(args[2]);    	
+        	System.out.println(Program.read(fileName, ReadFrom, RowsToRead));
+    	}
+    	
+    	catch(Exception e)
+    	{
+    		System.out.println("Что-то пошло не так");
+    	}
     }
     
     private static void exists(String fileName) throws FileNotFoundException {
@@ -36,26 +43,31 @@ public class Program
 	            //В цикле построчно считываем файл
 	        	String s;
 	        	int count = 0;
-	        	int Bourder = 0;
 	            while ((s = in.readLine()) != null && count - readFrom + 1 != rowsToRead ) {
-	            	count++;
+	             	count++;
 	            	if(count >= readFrom - 1)
 	            	{
 	                sb.append(s);
 	                sb.append("\n");
 	            	}
-	            }
-
+	            }          
 	            
-	        } finally {
+	        }	        
+	    	catch(Exception ex)
+	    	{
+	    		System.out.println(ex.getMessage());
+	    	}
+	        
+	        finally {
 	            //Также не забываем закрыть файл
 	            in.close();
 	        }
-	    } catch(IOException e) {
+	    } catch(IOException e) {	    	
 	        throw new RuntimeException(e);
 	    }
 	 
 	    //Возвращаем полученный текст с файла
+	    if (sb.length() == 0) return "Неверные введённые параметры или файл пустой\n";
 	    return sb.toString();
 	}
 }
