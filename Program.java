@@ -48,13 +48,14 @@ public class Program {
 			try {
 				// В цикле построчно считываем файл
 				String s;
-				int count = 0;
+				int count = 1;
 				while ((s = in.readLine()) != null
-						&& count - readFrom + 1 != rowsToRead) {
-					count++;
-					if (count >= readFrom - 1) {
+						&& count - readFrom != rowsToRead) {
+
+					if (count >= readFrom) {
 						sb.append(s + '\n');
 					}
+					count++;
 				}
 			}
 
