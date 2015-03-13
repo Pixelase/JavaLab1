@@ -5,8 +5,8 @@ public class Program {
 		try {
 			String inFileName = args[0];
 			String outFileName = args[1];
-			long readFrom = Integer.parseInt(args[2]);
-			long rowsToRead = Integer.parseInt(args[3]);
+			long readFrom = Long.parseLong(args[2]);
+			long rowsToRead = Long.parseLong(args[3]);
 			LogWriter.write(outFileName,
 					LogReader.read(inFileName, readFrom, rowsToRead));
 		}
