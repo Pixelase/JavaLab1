@@ -1,10 +1,14 @@
-﻿import java.text.ParsePosition;
+﻿import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LogParser {
 
-	public static LogEntry parse(String line) {
+	public static LogEntry parse(String line) throws UnknownHostException {
 
 		LogEntry logEntry = new LogEntry();
 
@@ -12,8 +16,12 @@ public class LogParser {
 		int indexOfQuotationMark = line.indexOf(quotationMark);
 		int lastIndexOfQuotationMark = line.lastIndexOf(quotationMark);
 		int lastIndexOfSpace = line.lastIndexOf(" ");
-
-		logEntry.setHost(line.substring(0, line.indexOf(" - - ")));
+		try {
+			logEntry.setHost(InetAddress.getByName(line.substring(0,
+					line.indexOf(" - - "))));
+		} catch (UnknownHostException ex) {
+			logEntry.setHost((line.substring(0, line.indexOf(" - - "))));
+		}
 		logEntry.setRequest(line.substring(indexOfQuotationMark,
 				lastIndexOfQuotationMark) + quotationMark);
 		logEntry.setHTTPReplyCode(Integer.parseInt(line.substring(
@@ -31,6 +39,18 @@ public class LogParser {
 				.parse(line, new ParsePosition(line.indexOf("["))));
 
 		return logEntry;
+	}
+
+	public static List<LogEntry> parse(List<String> data)
+			throws UnknownHostException {
+
+		List<LogEntry> logEntries = new ArrayList<LogEntry>();
+
+		for (String str : data) {
+			logEntries.add(parse(str));
+		}
+
+		return logEntries;
 	}
 
 }

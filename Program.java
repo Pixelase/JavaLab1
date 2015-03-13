@@ -7,8 +7,8 @@ public class Program {
 			String outFileName = args[1];
 			long readFrom = Long.parseLong(args[2]);
 			long rowsToRead = Long.parseLong(args[3]);
-			LogWriter.write(outFileName,
-					LogReader.read(inFileName, readFrom, rowsToRead));
+			LogWriter.write(outFileName, LogParser.parse(LogReader.read(
+					inFileName, readFrom, rowsToRead)));
 		}
 
 		catch (FileNotFoundException e) {

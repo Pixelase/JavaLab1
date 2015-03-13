@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LogReader {
 
@@ -13,10 +15,10 @@ public class LogReader {
 		}
 	}
 
-	public static String read(String fileName, long readFrom, long rowsToRead)
-			throws FileNotFoundException {
+	public static List<String> read(String fileName, long readFrom,
+			long rowsToRead) throws FileNotFoundException {
 
-		StringBuilder sb = new StringBuilder();
+		List<String> logEntries = new ArrayList<String>();
 
 		exists(fileName);
 
@@ -37,7 +39,7 @@ public class LogReader {
 
 					if (count >= readFrom) {
 
-						sb.append(LogParser.parse(s).toString() + '\n');
+						logEntries.add(s);
 					}
 					count++;
 				}
@@ -53,7 +55,7 @@ public class LogReader {
 		}
 
 		// Возвращаем полученный текст с файла
-		return sb.toString();
+		return logEntries;
 	}
 
 }

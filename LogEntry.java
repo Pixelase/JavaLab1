@@ -2,17 +2,17 @@
 
 public class LogEntry {
 
-	private String host;
+	private Object host;
 
 	public LogEntry() {
 		// TODO Автоматически созданная заглушка конструктора
 	}
 
-	public String getHost() {
+	public Object getHost() {
 		return host;
 	}
 
-	public void setHost(String host) {
+	public void setHost(Object host) {
 		this.host = host;
 	}
 
