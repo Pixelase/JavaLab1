@@ -5,10 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class LogParser {
+public class LogParser implements ILogParser {
 
-	public static LogEntry parse(String line) throws UnknownHostException {
+	@Override
+	public LogEntry parse(String line) throws UnknownHostException {
 
 		LogEntry logEntry = new LogEntry();
 
@@ -16,10 +19,12 @@ public class LogParser {
 		int indexOfQuotationMark = line.indexOf(quotationMark);
 		int lastIndexOfQuotationMark = line.lastIndexOf(quotationMark);
 		int lastIndexOfSpace = line.lastIndexOf(" ");
-		try {
+		final String pattern = "^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+		if (Pattern.compile(pattern)
+				.matcher(line.substring(0, line.indexOf(" - - "))).matches()) {
 			logEntry.setHost(InetAddress.getByName(line.substring(0,
 					line.indexOf(" - - "))));
-		} catch (UnknownHostException ex) {
+		} else {
 			logEntry.setHost((line.substring(0, line.indexOf(" - - "))));
 		}
 		logEntry.setRequest(line.substring(indexOfQuotationMark,
@@ -41,8 +46,8 @@ public class LogParser {
 		return logEntry;
 	}
 
-	public static List<LogEntry> parse(List<String> data)
-			throws UnknownHostException {
+	@Override
+	public List<LogEntry> parse(List<String> data) throws UnknownHostException {
 
 		List<LogEntry> logEntries = new ArrayList<LogEntry>();
 
@@ -52,5 +57,4 @@ public class LogParser {
 
 		return logEntries;
 	}
-
 }

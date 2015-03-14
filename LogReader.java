@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LogReader {
+public class LogReader implements ILogReader{
 
 	private static void exists(String fileName) throws FileNotFoundException {
 		File file = new File(fileName);
@@ -15,7 +15,8 @@ public class LogReader {
 		}
 	}
 
-	public static List<String> read(String fileName, long readFrom,
+	@Override
+	public List<String> read(String fileName, long readFrom,
 			long rowsToRead) throws FileNotFoundException {
 
 		List<String> logEntries = new ArrayList<String>();

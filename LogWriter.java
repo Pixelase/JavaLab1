@@ -2,9 +2,10 @@
 import java.io.PrintWriter;
 import java.util.List;
 
-public class LogWriter {
+public class LogWriter implements ILogWriter {
 
-	public static void write(String fileName, List<LogEntry> logEntries)
+	@Override
+	public void write(String fileName, List<LogEntry> logEntries)
 			throws FileNotFoundException {
 		PrintWriter writer = new PrintWriter(fileName);
 		for (LogEntry item : logEntries) {
