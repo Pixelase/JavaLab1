@@ -1,19 +1,14 @@
 ﻿import java.io.File;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 
 public class ArgsChecker implements IArgsChecker {
 
 	private String[] args;
-	private	String sourcePath;
+	private String sourcePath;
 	private String destinationPath;
 	private long readFrom;
 	private long rowsToRead;
 	private int reportNumber;
-	private String startDate;
-	private String endDate;
 
 	public ArgsChecker(String[] Args) {
 		args = Args;
@@ -21,21 +16,17 @@ public class ArgsChecker implements IArgsChecker {
 
 	@Override
 	public boolean isArgsCorrect() throws ParseException {
-		if (args.length == 7) {
+		if (args.length == 5) {
 			sourcePath = args[0];
 			destinationPath = args[1];
 			readFrom = Long.parseLong(args[2]);
 			rowsToRead = Long.parseLong(args[3]);
 			reportNumber = Integer.parseInt(args[4]);
-			startDate = args[5];
-			endDate = args[6];
 			if (isSourceCorrect(sourcePath)
 					&& isDestinationCorrect(destinationPath)
 					&& isTheLowerBoundCorrect(readFrom)
 					&& isAmountCorrect(rowsToRead)
-					&& isReportNumberCorrect(reportNumber)
-					&& isDateCorrect(startDate)
-					&& isDateCorrect(endDate)) {
+					&& isReportNumberCorrect(reportNumber)) {
 				return true;
 			}
 		}
@@ -96,19 +87,9 @@ public class ArgsChecker implements IArgsChecker {
 		}
 		return false;
 	}
-	
+
 	private boolean isReportNumberCorrect(int reportNumber) {
 		if (reportNumber > 0) {
-			return true;
-		}
-		return false;
-	}
-	
-	private boolean isDateCorrect(String date) throws ParseException
-	{
-		String timestampPattern = "[dd/MMM/yyyy:HH:mm:ss Z]";
-		if(new SimpleDateFormat(timestampPattern, Locale.US).parse(date) != null)
-		{
 			return true;
 		}
 		return false;

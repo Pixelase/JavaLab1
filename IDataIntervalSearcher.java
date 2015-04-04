@@ -3,6 +3,6 @@ import java.util.List;
 
 public interface IDataIntervalSearcher {
 
-	public List<LogEntry> Find(List<LogEntry> data, Date begin, Date end);
+	public List<LogEntry> find(List<LogEntry> data, Date startDate, Date endDate);
 
 }

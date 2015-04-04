@@ -13,5 +13,4 @@ public class LogWriter implements ILogWriter {
 		}
 		writer.close();
 	}
-
 }

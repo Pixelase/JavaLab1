@@ -3,33 +3,22 @@ import java.util.List;
 
 public class DateIntervalSearcher implements IDataIntervalSearcher {
 	@Override
-	public List<LogEntry> Find(List<LogEntry> data, Date begin, Date end) {
+	public List<LogEntry> find(List<LogEntry> data, Date startDate, Date endDate) {
 		int resultedBeginIndex;
 		int resultedEndIndex;
-		resultedBeginIndex = BinarySearch(data, begin);
-		resultedEndIndex = BinarySearch(data, end);
+		resultedBeginIndex = findFirst(data, startDate);
+		resultedEndIndex = findFirst(data, endDate);
 		return data.subList(resultedBeginIndex, resultedEndIndex);
 	}
 
-	private int BinarySearch(List<LogEntry> data, Date date) {
-		int beginIndex = 0;
-		int endIndex = data.size() - 1;
-		int center = 0;
-		while ((beginIndex != endIndex)) {
-			center = (beginIndex + endIndex) / 2;
-			if (data.get(center).getTimestamp().compareTo(date) == 0) {
-				return center;
+	private int findFirst(List<LogEntry> data, Date date) {
+		int index = 0;
+		for (LogEntry item : data) {
+			if (item.getTimestamp().toString().contentEquals(date.toString())) {
+				return index + 1;
 			}
-			if (data.get(center).getTimestamp().compareTo(date) == -1) {
-				beginIndex = center + 1;
-				continue;
-			}
-			if (data.get(center).getTimestamp().compareTo(date) == 1) {
-				endIndex = center - 1;
-				continue;
-			}
-
+			index++;
 		}
-		return center - 1;
+		return index;
 	}
 }

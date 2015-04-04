@@ -1,11 +1,23 @@
+import java.util.List;
+
 public class MaxRequestCountReport {
-	private Object[] Hosts;
+	private List<Object> hosts;
 
-	public Object[] getHosts() {
-		return Hosts;
+	public List<Object> getHosts() {
+		return hosts;
 	}
 
-	public void setHosts(Object[] hosts) {
-		Hosts = hosts;
+	public void setHosts(List<Object> hosts) {
+		this.hosts = hosts;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (Object item : hosts) {
+			sb.append(item.toString() + "\n");
+		}
+		return "Max Request Count Report\n\n" + sb;
+	}
+
 }
