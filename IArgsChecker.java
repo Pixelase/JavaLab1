@@ -1,7 +1,9 @@
+import java.text.ParseException;
+
 
 public interface IArgsChecker {
 	
-	public boolean isArgsCorrect();
-	public void ShowCheckingInfo();
+	public boolean isArgsCorrect() throws ParseException;
+	public void ShowCheckingInfo() throws ParseException;
 
 }

@@ -1,28 +1,41 @@
 ﻿import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 
 public class ArgsChecker implements IArgsChecker {
 
 	private String[] args;
-	String sourcePath;
-	String destinationPath;
-	long readFrom;
-	long rowsToRead;
+	private	String sourcePath;
+	private String destinationPath;
+	private long readFrom;
+	private long rowsToRead;
+	private int reportNumber;
+	private String startDate;
+	private String endDate;
 
 	public ArgsChecker(String[] Args) {
 		args = Args;
 	}
 
 	@Override
-	public boolean isArgsCorrect() {
-		if (args.length == 4) {
+	public boolean isArgsCorrect() throws ParseException {
+		if (args.length == 7) {
 			sourcePath = args[0];
 			destinationPath = args[1];
 			readFrom = Long.parseLong(args[2]);
 			rowsToRead = Long.parseLong(args[3]);
+			reportNumber = Integer.parseInt(args[4]);
+			startDate = args[5];
+			endDate = args[6];
 			if (isSourceCorrect(sourcePath)
 					&& isDestinationCorrect(destinationPath)
 					&& isTheLowerBoundCorrect(readFrom)
-					&& isAmountCorrect(rowsToRead)) {
+					&& isAmountCorrect(rowsToRead)
+					&& isReportNumberCorrect(reportNumber)
+					&& isDateCorrect(startDate)
+					&& isDateCorrect(endDate)) {
 				return true;
 			}
 		}
@@ -30,7 +43,7 @@ public class ArgsChecker implements IArgsChecker {
 	}
 
 	@Override
-	public void ShowCheckingInfo() {
+	public void ShowCheckingInfo() throws ParseException {
 		if (isArgsCorrect()) {
 			System.out.println("Ввёденные параметры корректны\n");
 		} else {
@@ -79,6 +92,23 @@ public class ArgsChecker implements IArgsChecker {
 
 	private boolean isAmountCorrect(long amount) {
 		if (amount > 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isReportNumberCorrect(int reportNumber) {
+		if (reportNumber > 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isDateCorrect(String date) throws ParseException
+	{
+		String timestampPattern = "[dd/MMM/yyyy:HH:mm:ss Z]";
+		if(new SimpleDateFormat(timestampPattern, Locale.US).parse(date) != null)
+		{
 			return true;
 		}
 		return false;

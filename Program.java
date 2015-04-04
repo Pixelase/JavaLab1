@@ -1,7 +1,8 @@
 ﻿import java.io.FileNotFoundException;
+import java.text.ParseException;
 
 public class Program {
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws FileNotFoundException, ParseException {
 
 		ILogProcessor logProcessor = new LogProcessor();
 		IArgsChecker argsChecker = new ArgsChecker(args);
