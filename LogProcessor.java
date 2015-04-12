@@ -26,7 +26,7 @@ public class LogProcessor implements ILogProcessor {
 	@Override
 	public void createReport(String[] args) {
 		ILogParser logParser = new LogParser();
-		ILogReader logReader = new LogReader();
+		ILogReader logReader = new LogBinaryReader();
 		try {
 			String sourcePath = args[0];
 			String destinationPath = args[1];
