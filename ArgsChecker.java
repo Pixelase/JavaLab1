@@ -1,4 +1,4 @@
-﻿import java.io.File;
+import java.io.File;
 import java.text.ParseException;
 
 public class ArgsChecker implements IArgsChecker {
@@ -68,7 +68,7 @@ public class ArgsChecker implements IArgsChecker {
 
 	private boolean isDestinationCorrect(String path) {
 		File file = new File(path);
-		if (file.canWrite()) {
+		if (!file.exists() || file.canWrite()) {
 			return true;
 		}
 		return false;
