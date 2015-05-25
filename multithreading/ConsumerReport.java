@@ -9,32 +9,35 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 import main.LogEntry;
+import main.MaxReplySizeReport;
+import main.MaxRequestCountReport;
+import main.TotalRepliesSizeReport;
 
 public class ConsumerReport implements Runnable {
 
 	private int count = 0;
 	private Map<String, Integer> dict;
-	private LogEntry maxSize;
-	private long totalSize = 0;
-	private final int amountOfLines;
-	private BlockingQueue<LogEntry> queueLogs;
+	private LogEntry maxSizeEntry;
+	private int totalSize = 0;
+	private final int rowsToRead;
+	private BlockingQueue<LogEntry> entriesQueue;
 	private Date startDate;
-	private Date finishDate;
-	
-	public static volatile boolean runnable;
-	public static ActiveHostsReport activeHosts;
-	public static TotalReplySizeReport totalReplySize;
-	public static MaxReplyBytesReport maxReplyBytes;
+	private Date endDate;
 
-	ConsumerReport(int amountOfLines, BlockingQueue<LogEntry> queueLogs,
-			Date startDate, Date finishDate) {
+	public static volatile boolean runnable;
+	public static MaxRequestCountReport maxRequestCountReport;
+	public static TotalRepliesSizeReport totalRepliesSizeReport;
+	public static MaxReplySizeReport maxReplySizeReport;
+
+	ConsumerReport(int rowsToRead, BlockingQueue<LogEntry> entriesQueue,
+			Date startDate, Date endDate) {
 		dict = new HashMap<String, Integer>();
-		maxSize = new LogEntry();
-		this.amountOfLines = amountOfLines;
-		this.queueLogs = queueLogs;
+		maxSizeEntry = new LogEntry();
+		this.rowsToRead = rowsToRead;
+		this.entriesQueue = entriesQueue;
 
 		this.startDate = startDate;
-		this.finishDate = finishDate;
+		this.endDate = endDate;
 
 		runnable = true;
 	}
@@ -42,24 +45,28 @@ public class ConsumerReport implements Runnable {
 	@Override
 	public void run() {
 		try {
-			while (runnable && count < amountOfLines) {
-				consume(queueLogs.take());
+			while (runnable && count < rowsToRead) {
+				consume(entriesQueue.take());
 			}
 
 			List<Map.Entry<String, Integer>> list = new ArrayList<>(
 					dict.entrySet());
 			Collections.sort(list,
 					(a, b) -> b.getValue().compareTo(a.getValue()));
-			if (ActiveHostsReport.numberOfHosts > list.size()) {
-				activeHosts = new ActiveHostsReport(list);
+			maxRequestCountReport = new MaxRequestCountReport();
+			if (MaxRequestCountReport.numberOfHosts > list.size()) {
+				maxRequestCountReport.setHosts(list);
+				;
 			} else {
-				activeHosts = new ActiveHostsReport(list.subList(0,
-						ActiveHostsReport.numberOfHosts));
+				maxRequestCountReport.setHosts(list.subList(0,
+						MaxRequestCountReport.numberOfHosts));
 			}
 
-			totalReplySize = new TotalReplySizeReport(totalSize);
+			totalRepliesSizeReport = new TotalRepliesSizeReport();
+			totalRepliesSizeReport.totalSize = totalSize;
 
-			maxReplyBytes = new MaxReplyBytesReport(maxSize);
+			maxReplySizeReport = new MaxReplySizeReport();
+			maxReplySizeReport.setMaxReplySizeEtry(maxSizeEntry);
 		} catch (InterruptedException ex) {
 		}
 	}
@@ -67,10 +74,10 @@ public class ConsumerReport implements Runnable {
 	private void consume(LogEntry log) throws InterruptedException {
 		++count;
 		if (!(log.getTimestamp().before(startDate) || log.getTimestamp().after(
-				finishDate))) {
+				endDate))) {
 			int temp = log.getReplyBytes();
-			if (temp > maxSize.getReplyBytes()) {
-				maxSize = log;
+			if (temp > maxSizeEntry.getReplyBytes()) {
+				maxSizeEntry = log;
 			}
 			totalSize += temp;
 
@@ -80,7 +87,7 @@ public class ConsumerReport implements Runnable {
 			} else {
 				dict.put(host.toString(), 1);
 			}
-		} else if (log.getTimestamp().after(finishDate)) {
+		} else if (log.getTimestamp().after(endDate)) {
 			runnable = false;
 		}
 	}

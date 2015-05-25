@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
-import java.sql.SQLException;
 import java.util.concurrent.BlockingQueue;
 
 import main.ILogParser;
@@ -17,16 +16,16 @@ class Consumer implements Runnable {
 	private ILogParser parser;
 	private static volatile PrintWriter out;
 	private static volatile int count = 0;
-	private final int amountOfLines;
-	private BlockingQueue<String> queueLines;
-	private BlockingQueue<LogEntry> queueLogs;
+	private final int rowsToRead;
+	private BlockingQueue<String> linesQueue;
+	private BlockingQueue<LogEntry> entriesQueue;
 
 	Consumer(String path, int amountOfLines, BlockingQueue<String> queueLines,
 			BlockingQueue<LogEntry> queueLogs) throws IOException {
 		parser = new LogParser();
-		this.amountOfLines = amountOfLines;
-		this.queueLines = queueLines;
-		this.queueLogs = queueLogs;
+		this.rowsToRead = amountOfLines;
+		this.linesQueue = queueLines;
+		this.entriesQueue = queueLogs;
 		out = new PrintWriter(new BufferedWriter(new FileWriter(path)));
 	}
 
@@ -34,12 +33,12 @@ class Consumer implements Runnable {
 	public void run() {
 
 		try {
-			while (count < amountOfLines) {
+			while (count < rowsToRead) {
 
-				consume(queueLines.take());
+				consume(linesQueue.take());
 			}
 			out.close();
-		} catch (InterruptedException | SQLException ex) {
+		} catch (InterruptedException ex) {
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -47,13 +46,13 @@ class Consumer implements Runnable {
 
 	}
 
-	private void consume(String line) throws InterruptedException, SQLException, UnknownHostException {
+	private void consume(String line) throws InterruptedException,
+			UnknownHostException {
 		++count;
 		main.LogEntry entry = parser.parse(line);
 		out.println(entry);
-		//DatabaseConnect.WriteDatabase(log, count);
 		if (ConsumerReport.runnable) {
-			queueLogs.put(entry);
+			entriesQueue.put(entry);
 		}
 	}
 }

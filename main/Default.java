@@ -2,7 +2,7 @@
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 
-public class Program {
+public class Default {
 	public static void main(String[] args) throws FileNotFoundException,
 			ParseException {
 

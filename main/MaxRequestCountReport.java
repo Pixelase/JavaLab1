@@ -1,14 +1,16 @@
 package main;
 import java.util.List;
+import java.util.Map.Entry;
 
 public class MaxRequestCountReport {
-	private List<Object> hosts;
+	public static final int numberOfHosts = 5;
+	private List<Entry<String, Integer>> hosts;
 
-	public List<Object> getHosts() {
+	public List<Entry<String, Integer>> getHosts() {
 		return hosts;
 	}
 
-	public void setHosts(List<Object> hosts) {
+	public void setHosts(List<Entry<String, Integer>> hosts) {
 		this.hosts = hosts;
 	}
 
@@ -20,5 +22,7 @@ public class MaxRequestCountReport {
 		}
 		return "Max Request Count Report\n\n" + sb;
 	}
+	
+	
 
 }
