@@ -1,4 +1,5 @@
-﻿import java.net.InetAddress;
+﻿package main;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;

@@ -1,4 +1,5 @@
-﻿import java.util.Date;
+﻿package main;
+import java.util.Date;
 
 public class LogEntry {
 

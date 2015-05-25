@@ -1,3 +1,4 @@
+package main;
 import java.io.PrintWriter;
 
 public class LogProcessor implements ILogProcessor {

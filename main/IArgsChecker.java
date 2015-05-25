@@ -1,3 +1,4 @@
+package main;
 import java.text.ParseException;
 
 public interface IArgsChecker {

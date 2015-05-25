@@ -1,4 +1,5 @@
-﻿import java.io.FileNotFoundException;
+﻿package main;
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 
 public class Program {
