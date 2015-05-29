@@ -35,7 +35,8 @@ public class Producer implements Runnable {
 			}
 			reader.close();
 		} catch (IOException | InterruptedException e) {
-			System.out.println("\nЧто-то пошло не так: \n" + e.getMessage() + "\n");
+			System.out.println("\nЧто-то пошло не так: \n" + e.getMessage()
+					+ "\n");
 		}
 	}
 

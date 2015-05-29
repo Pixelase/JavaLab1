@@ -8,17 +8,19 @@ import java.util.Locale;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.sql.SQLException;
 
 import main.ArgsChecker;
 import main.IArgsChecker;
 import main.LogEntry;
+import database.DatabaseWorker;
 
 public class Multithreading {
 
 	private static Scanner scan;
 
 	public static void main(String[] args) throws InterruptedException,
-			IOException, ClassNotFoundException, ParseException {
+			IOException, ClassNotFoundException, ParseException, SQLException {
 		IArgsChecker argsChecker = new ArgsChecker(args);
 
 		if (!argsChecker.isArgsCorrect()) {
@@ -27,12 +29,30 @@ public class Multithreading {
 		}
 
 		long before = System.currentTimeMillis();
-		runThreads(args);
+		String databasePath = "logs.s3db";
+
+		// runThreads(args);
+		readFromDatabase(databasePath, args);
 
 		long after = System.currentTimeMillis();
 		long time = (after - before);
 		System.out.println("time " + time);
 
+	}
+
+	public static void readFromDatabase(String path, String[] args)
+			throws ClassNotFoundException, SQLException {
+		DatabaseWorker.connectToDatabase(path);
+		DatabaseWorker.createDatabase();
+
+		String query = "sum(replySize)";
+		DatabaseWorker.readDatabase(query, args);
+		query = "max(replySize)";
+		System.out.println();
+		DatabaseWorker.readDatabase(query, args);
+		System.out.println();
+
+		DatabaseWorker.closeDatabase();
 	}
 
 	public static void runThreads(String[] args) throws IOException,

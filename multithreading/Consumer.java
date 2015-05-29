@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
+import java.sql.SQLException;
 
 import main.ILogParser;
 import main.LogEntry;
 import main.LogParser;
+import database.DatabaseWorker;
 
 class Consumer implements Runnable {
 
@@ -38,7 +40,8 @@ class Consumer implements Runnable {
 				consume(linesQueue.take());
 			}
 			out.close();
-		} catch (InterruptedException ex) {
+			DatabaseWorker.closeDatabase();
+		} catch (InterruptedException | SQLException | ClassNotFoundException ex) {
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -47,10 +50,11 @@ class Consumer implements Runnable {
 	}
 
 	private void consume(String line) throws InterruptedException,
-			UnknownHostException {
+			UnknownHostException, SQLException {
 		++count;
 		main.LogEntry entry = parser.parse(line);
-		out.println(entry);
+		// out.println(entry);
+		// DatabaseConnect.WriteDatabase(entry, count);
 		if (ConsumerReport.runnable) {
 			entriesQueue.put(entry);
 		}
